@@ -9,6 +9,11 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     outline: none;
+    cursor: pointer;
+}
+
+select:hover {
+    background-color: #ffbd7a;
 }
 
 input {
