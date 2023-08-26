@@ -19,7 +19,7 @@ console.log(result);
 
 */
 
-/*
+
 const form = document.querySelector('#form-reg');
 
 const reload = (event) => {
@@ -40,5 +40,5 @@ const reload = (event) => {
 }
 
 form.addEventListener('submit', reload);
-*/
+
 
