@@ -1,39 +1,78 @@
 const forms = document.querySelector('#form-reg');
 
-const getFormValue1 = (event) => {
+
+getApi();
+
+forms.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const formData = new FormData(form);
-
-    const values = Object.fromEntries(formData.entries());
-
-    console.log(values);
-};
-
-forms.addEventListener('submit', getFormValue1);
-
-// ------------------------------------------------------------------------
-
-const form = document.querySelector('form');
-const inputs = form.querySelectorAll('input');
-
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    validateForm();
+    if (validate()){
+        sendingData();
+    };
 });
 
-function validateForm() {
-    inputs.forEach(function (input) {
-        if (input.value == "") {
-            input.style.borderColor = 'red';
-            const errorMessage = document.createElement('span');
-            errorMessage.innerText = 'Поле не должно быть пустым';
-            errorMessage.style.color = 'red';
-            input.parentNode.appendChild(errorMessage);
-        } else {
-            input.style.borderColor = 'green';
-            
-        }
-    });
+async function sendingData(){
+    const formData = new FormData(forms);
+    const data = Object.fromEntries(formData.entries());
+    data.date_of_birth = '09.09.2023';
+    const requestBody = JSON.stringify(data);
+
+    const url = 'http://51.250.97.89:8008/api/v1/student/append';
+
+    const options = {
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:requestBody
+    }
+
+    const response = await fetch(url, options)
+    console.log(response);
+
+    if(response.ok){
+        window.location.href = 'start.html';
+    }
 }
+
+
+function validate() {
+    const elems = document.querySelectorAll('[data-required]');
+    let count = 0;
+
+    elems.forEach((elem) => {
+       
+        if (!elem.value) {
+            count++;
+            elem.style.borderColor = 'red';
+        }
+    })
+
+    return count === 0;
+}
+
+async function getApi(){
+    const url = 'http://51.250.97.89:8008/api/v1/direction/list';
+
+    const response = await fetch(url);
+    if(response.ok){
+        const data = await response.json();
+
+        console.log(data);
+
+        renderGetApi(data);
+    }
+}
+
+function renderGetApi(data){
+    const directions = document.getElementById('direction_id')
+
+    data.forEach((elem) => {
+        const addElemOPtions = document.createElement('option');
+
+        addElemOPtions.value = elem.id;
+        addElemOPtions.textContent = elem.name;
+        directions.appendChild(addElemOPtions);
+    })
+}
+
